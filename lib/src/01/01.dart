@@ -16,6 +16,22 @@ class _AppState extends State<App> {
   String? _lei;
   String? _error;
 
+  bool isValid(String text) {
+
+    if (text.length > 1 && text[0] == '0' && text[1] != '.') {
+      return false;
+    }
+    if (text.contains(',')) {
+      return false;
+    }
+    if (text.length > 1 && text[0] == '.' && text[1] != '.') {
+      return true;
+    }
+
+    RegExp regExp = RegExp(r'^[0-9]+(.[0-9]+)?$');
+    return regExp.hasMatch(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,9 +70,8 @@ class _AppState extends State<App> {
                   ),
                   RaisedButton(
                     onPressed: () {
-                      RegExp regExp = RegExp(r'^[0-9]+(.[0-9]+)?$');
                       if (_price != null) {
-                        if (regExp.hasMatch(_price!)) {
+                        if (isValid(_price!)) {
                           var euro = double.parse(_price!);
                           var lei = euro * 4.93;
                           setState(() {
